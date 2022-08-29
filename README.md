@@ -18,7 +18,7 @@ pip install -r requirements.txt
 
 ## Usage
 
-Run *soccer-players-in-common.py* and follow the instructions printed on the screen: type the number of teams you are interested in and then the names of said teams, as they are reported on *worldfootball.net*.
+Run *soccer-players-in-common.py* and follow the instructions printed on the screen: type the number of teams you are interested in and then the names of said teams, **as they are reported on *worldfootball.net***.
 
 You will get a list containing the names of the players.
 
