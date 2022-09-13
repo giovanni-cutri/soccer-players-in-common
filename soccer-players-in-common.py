@@ -53,7 +53,8 @@ def get_players_in_common(players):
 
 
 def print_players_in_common(players_in_common):
-    print(players_in_common)
+    print("\nPlayers in common between the teams:\n")
+    print(*players_in_common, sep="\n")
 
 
 def main():
