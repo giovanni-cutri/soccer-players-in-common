@@ -1,12 +1,10 @@
 import requests
 import bs4
-import lxml
-import pickle
+import json
 
 site_domain = "https://www.worldfootball.net"
 
 all_leagues_page = "https://www.worldfootball.net/continents/uefa/"
-# despite referring only to UEFA, actually contains links for competitions all over the world
 
 res = requests.get(all_leagues_page)
 res.raise_for_status()
@@ -16,7 +14,7 @@ leagues_tag_objects = soup.select("a[href^='/competition']")
 
 leagues = []
 
-for i in leagues_tag_objects:
+for i in leagues_tag_objects[22:23]:
     partial_link = i.attrs["href"]
     leagues.append(site_domain + partial_link)
 
@@ -42,33 +40,25 @@ for i in leagues:
 
 all_time_league_tables = list(dict.fromkeys(all_time_league_tables))
 
-teams_names_raw = []
-teams_links_raw = []
-
-world_football_dict = {
-
-}
+world_football_data = []
 
 for i in all_time_league_tables:
     print("Currently at " + i)
     res = requests.get(i)
     res.raise_for_status()
     soup = bs4.BeautifulSoup(res.text, "lxml")
-    teams_elements = soup.select("td a[href^='/teams/']")
+    teams_elements = soup.select("td a[href^='/teams/'] img")
     for j in teams_elements:
-        if j.getText() not in teams_names_raw:
-            teams_names_raw.append(j.getText())
-            teams_links_raw.append("https://www.worldfootball.net" + j.attrs["href"])
+        team_name = j.attrs["alt"]
+        team_image = j.attrs["src"]
+        team_link = "https://www.worldfootball.net/teams/" + j.attrs["alt"].lower().replace(" ", "-") + "/"
+        temp_dict = {
+            "name": team_name,
+            "image": team_image,
+            "link": team_link
+        }
+        if temp_dict not in world_football_data:
+            world_football_data.append(temp_dict)
 
-teams_names = list(filter(None, teams_names_raw))
-teams_links = list(dict.fromkeys(teams_links_raw))
-
-teams_players = []
-
-for i in teams_links:
-    teams_players.append(i + "10/")
-
-world_football_dict = dict(zip(teams_names, teams_players))
-
-with open('world_football_dict.pkl', 'wb') as f:
-    pickle.dump(world_football_dict, f)
+with open('world_football_data.json', 'w') as f:
+    json.dump(world_football_data, f)
