@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>Hello</title>
+        <title>Soccer Players</title>
     <script type = "text/javascript">
         document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('submit').onclick = function() {
@@ -13,10 +13,14 @@
     });
     </script>
     </head>
-    <body>
+    <body style="background-color: #567d46">
         <ul>
             {% for player in players %}
-                <li>{{ player.name }} <img src="{{ player.image }}"></li>
+                <h1 style="margin: auto; width: 20%;">{{ player.name }}</h1>
+                <br />
+                <img style="display: block; margin-left: auto; margin-right: auto; width:20%;" src="{{ player.image }}">
+                <br />
+                <br />
             {% endfor %}
         </ul>
 
