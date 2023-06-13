@@ -2,15 +2,64 @@
 <html lang="en">
     <head>
         <title>Hello</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.css" rel="stylesheet"></link>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
+    <script type = "text/javascript">
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('add').onclick = function() {
+                div = document.getElementById('teams')
+                select = document.createElement('select');
+                select.classList.add('js-example-basic-multiple')
+                select.innerHTML = '{% for team in teams %} {% endfor %}'
+                blank_option = document.createElement('option')
+                blank_option.setAttribute('selected', '')
+                blank_option.setAttribute('disabled', '')
+                blank_option.setAttribute('hidden', '')
+                blank_option.setAttribute('style', 'display:none')
+                blank_option.setAttribute('value', '')
+                blank_option.innerHTML = ''
+                image = document.createElement('img');
+                image.setAttribute('src', '{{ team.image }}')
+                option = document.createElement('option')
+                option.setAttribute('value', '')
+                option.innerHTML = '{{ team.name }}'
+                option.appendChild(image)
+                select.appendChild(blank_option)
+                select.appendChild(option)
+                console.log(select)
+                div.appendChild(select)
+            }
+        });
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $(".js-example-basic-multiple").select2();
+        });
+    </script>
     </head>
     <body>
+        <div id="teams">
         <form action="#" method="get">
-            <input list="teams" name="team">
-            <datalist id="teams">
-                { for team in teams[1:2] %}
-                    <option value="{{ team.name }}">
-                { %endfor %}
-            </datalist>
+
+            <select class="js-example-basic-multiple">
+                <option selected disabled hidden style="display: none" value=''></option>
+                {% for team in teams %}
+                    <option value = ""><img src="{{ team.image }}">{{ team.name }}</option>
+                {% endfor %}
+            </select>
+
+            <select class="js-example-basic-multiple">
+                <option selected disabled hidden style="display: none" value=''></option>
+                {% for team in teams %}
+                    <option value = ""><img src="{{ team.image }}">{{ team.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        
+            <button id="add">+</button>
+            <button id="remove">-</button>
+
             <input type="submit">
           </form>
     </body>
