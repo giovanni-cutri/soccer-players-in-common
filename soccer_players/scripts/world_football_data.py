@@ -1,6 +1,7 @@
 import requests
 import bs4
 import json
+from itertools import islice
 
 site_domain = "https://www.worldfootball.net"
 
@@ -14,7 +15,7 @@ leagues_tag_objects = soup.select("a[href^='/competition']")
 
 leagues = []
 
-for i in leagues_tag_objects[22:23]:
+for i in leagues_tag_objects:
     partial_link = i.attrs["href"]
     leagues.append(site_domain + partial_link)
 
@@ -42,6 +43,9 @@ all_time_league_tables = list(dict.fromkeys(all_time_league_tables))
 
 world_football_data = []
 
+links = []
+pk = 1
+
 for i in all_time_league_tables:
     print("Currently at " + i)
     res = requests.get(i)
@@ -52,13 +56,19 @@ for i in all_time_league_tables:
         team_name = j.attrs["alt"]
         team_image = j.attrs["src"]
         team_link = "https://www.worldfootball.net/teams/" + j.attrs["alt"].lower().replace(" ", "-") + "/"
-        temp_dict = {
-            "name": team_name,
-            "image": team_image,
-            "link": team_link
-        }
-        if temp_dict not in world_football_data:
+        if team_link not in links:
+            links.append(team_link)
+            temp_dict = {
+                "model": "soccer_players.team",
+                "pk": pk,
+                "fields": {
+                    "name": team_name,
+                    "image": team_image,
+                    "link": team_link
+                }
+            }
             world_football_data.append(temp_dict)
+            pk = pk + 1
 
-with open('world_football_data.json', 'w') as f:
+with open('../fixtures/world_football_data.json', 'w') as f:
     json.dump(world_football_data, f)

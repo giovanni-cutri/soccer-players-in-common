@@ -4,6 +4,14 @@
         <title>Hello</title>
     </head>
     <body>
-        <h1>{{ teams }}</h1>
+        <form action="#" method="get">
+            <input list="teams" name="team">
+            <datalist id="teams">
+                { for team in teams[1:2] %}
+                    <option value="{{ team.name }}">
+                { %endfor %}
+            </datalist>
+            <input type="submit">
+          </form>
     </body>
 </html>
