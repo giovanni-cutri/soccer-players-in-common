@@ -12,7 +12,7 @@ def index(request):
 def number(request, num):
     return render(request, "soccer_players/teams.html", {
         "number": range(num),
-        "teams": Team.objects.all()
+        "teams": Team.objects.all().order_by("name")
     })
 
 def players(request):

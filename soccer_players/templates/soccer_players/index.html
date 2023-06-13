@@ -1,13 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>Soccer Players</title>
+    <title>Soccer Players</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.css" rel="stylesheet"></link>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $(".js-example-basic-multiple").select2();
+        });
+    </script>
+    <script type = "text/javascript">
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('number').onclick = function() {
+                    
+            }
+
+    });
+    </script>
     <script type = "text/javascript">
         document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('submit').onclick = function() {
                 num = document.getElementById('number').value
-                console.log(num);
-                location.href = 'teams/' + num
+                fetch(`/teams/${num}`)
+                .then(response => response.text())
+                .then(html => {
+                    // Log text and display on page
+                    let parser = new DOMParser();
+                    let doc = parser.parseFromString(html, 'text/html');
+                    let new_body = doc.querySelector('body');
+                    let old_body = document.querySelector('body')
+                    old_body.parentNode.replaceChild(new_body, old_body);
+                });
             }
 
     });
@@ -28,5 +52,6 @@
         
         <input type="submit" id="submit">
 
+        <div id="content"></div>
     </body>
 </html>
