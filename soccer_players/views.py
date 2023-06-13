@@ -25,7 +25,8 @@ def players(request):
         players = []
 
         for i in teams:
-            res = requests.get(i + "10/")
+            res = requests.get(i)
+            print(i)
             res.raise_for_status()
             soup = bs4.BeautifulSoup(res.text, "lxml")
             players_elements = soup.select("a[href^='/player']")

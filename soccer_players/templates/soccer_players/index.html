@@ -7,15 +7,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
     <script type="text/javascript">
         $(document).ready(function() {
-            $(".js-example-basic-multiple").select2();
-        });
-    </script>
-    <script type = "text/javascript">
-        document.addEventListener('DOMContentLoaded', () => {
-            document.getElementById('number').onclick = function() {
-                    
-            }
-
+    $('.js-example-basic-single').select2();
     });
     </script>
     <script type = "text/javascript">
@@ -25,20 +17,19 @@
                 fetch(`/teams/${num}`)
                 .then(response => response.text())
                 .then(html => {
-                    // Log text and display on page
                     let parser = new DOMParser();
                     let doc = parser.parseFromString(html, 'text/html');
                     let new_body = doc.querySelector('body');
-                    let old_body = document.querySelector('body')
-                    old_body.parentNode.replaceChild(new_body, old_body);
+                    let old_body = document.querySelector('body');
+                    old_body.replaceWith(new_body);
+                    $('.js-example-basic-single').select2();
                 });
             }
-
     });
     </script>
     </head>
     <body>
-        <select name="number" id="number">
+        <select class="js-example-basic-single" name="number" id="number">
             <option value="2">2</option>
             <option value="3">3</option>
             <option value="4">4</option>

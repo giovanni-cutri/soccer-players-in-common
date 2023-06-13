@@ -1,13 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.css" rel="stylesheet"></link>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
+        <script type="text/javascript"> 
+            $(document).ready(function() {
+            $('.js-example-basic-single').select2();
+            });
+        </script>
     </head>
     <body>
-        <form action="players/" method="POST">
+        <form action="teams/players/" method="POST">
             {% csrf_token %}
 
             {% for num in number %}
-            <select class="js-example-basic-multiple" name="{{ num }}">
+            <select class="js-example-basic-single" name="{{ num }}">
                 <option selected disabled hidden style="display: none" value=''></option>
                 {% for team in teams %}
                     <option value = "{{ team.link }}"><img src="{{ team.image }}">{{ team.name }}</option>

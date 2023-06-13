@@ -29,7 +29,7 @@ for i in leagues:
     try:
         res = requests.get(i)
         res.raise_for_status()
-    except requests.exceptions.HTTPError:
+    except (requests.exceptions.HTTPError, requests.exceptions.ConnectionError):
         print("HTTP Error 500: Internal Server Error")
         continue
     soup = bs4.BeautifulSoup(res.text, "lxml")
@@ -48,27 +48,33 @@ pk = 1
 
 for i in all_time_league_tables:
     print("Currently at " + i)
-    res = requests.get(i)
-    res.raise_for_status()
+    try:
+        res = requests.get(i)
+        res.raise_for_status()
+    except (requests.exceptions.HTTPError, requests.exceptions.ConnectionError):
+        print("HTTP Error 500: Internal Server Error")
+        continue
     soup = bs4.BeautifulSoup(res.text, "lxml")
     teams_elements = soup.select("td a[href^='/teams/'] img")
     for j in teams_elements:
         team_name = j.attrs["alt"]
         team_image = j.attrs["src"]
-        team_link = "https://www.worldfootball.net/teams/" + j.attrs["alt"].lower().replace(" ", "-") + "/"
+        team_link = "https://www.worldfootball.net/teams/" + j.attrs["alt"].lower().replace(" ", "-") + "/10/"
         if team_link not in links:
-            links.append(team_link)
-            temp_dict = {
-                "model": "soccer_players.team",
-                "pk": pk,
-                "fields": {
-                    "name": team_name,
-                    "image": team_image,
-                    "link": team_link
+            r = requests.head(team_link)
+            if r.status_code != 404:
+                links.append(team_link)
+                temp_dict = {
+                    "model": "soccer_players.team",
+                    "pk": pk,
+                    "fields": {
+                        "name": team_name,
+                        "image": team_image,
+                        "link": team_link
+                    }
                 }
-            }
-            world_football_data.append(temp_dict)
-            pk = pk + 1
+                world_football_data.append(temp_dict)
+                pk = pk + 1
 
 with open('../fixtures/world_football_data.json', 'w') as f:
     json.dump(world_football_data, f)
