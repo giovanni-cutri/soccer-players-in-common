@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Hello</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.css" rel="stylesheet"></link>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $(".js-example-basic-multiple").select2();
+        });
+    </script>
+    <script type = "text/javascript">
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('number').onclick = function() {
+                    
+            }
+
+    });
+    </script>
+    </head>
+    <body>
+            
+        <form action="players/" method="POST">
+            {% csrf_token %}
+
+            {% for num in number %}
+            <select class="js-example-basic-multiple" name="{{ num }}">
+                <option selected disabled hidden style="display: none" value=''></option>
+                {% for team in teams %}
+                    <option value = "{{ team.link }}"><img src="{{ team.image }}">{{ team.name }}</option>
+                {% endfor %}
+            </select>
+            {% endfor %}
+
+            <input type="submit">
+          </form>
+    </body>
+</html>

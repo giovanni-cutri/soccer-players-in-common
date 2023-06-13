@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Hello</title>
+    <script type = "text/javascript">
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('submit').onclick = function() {
+                num = document.getElementById('number').value
+                console.log(num);
+                location.href = 'teams/' + num
+            }
+
+    });
+    </script>
+    </head>
+    <body>
+        <ul>
+            {% for player in players %}
+                <li>{{ player.name }} <img src="{{ player.image }}"></li>
+            {% endfor %}
+        </ul>
+
+    </body>
+</html>
