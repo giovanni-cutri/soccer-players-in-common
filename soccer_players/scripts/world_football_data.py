@@ -56,13 +56,18 @@ for i in all_time_league_tables:
         continue
     soup = bs4.BeautifulSoup(res.text, "lxml")
     teams_elements = soup.select("td a[href^='/teams/'] img")
+    teams_elements_doubled = soup.select("td a[href^='/teams/']")
+
+    counter = 0
     for j in teams_elements:
-        team_name = j.attrs["alt"]
         team_image = j.attrs["src"]
-        team_link = "https://www.worldfootball.net/teams/" + j.attrs["alt"].lower().replace(" ", "-") + "/10/"
+        team_link = "https://www.worldfootball.net" + teams_elements_doubled[counter].attrs["href"] + "10/"
         if team_link not in links:
             r = requests.head(team_link)
             if r.status_code != 404:
+                r = requests.get(team_link)
+                soup = bs4.BeautifulSoup(r.text, "lxml")
+                team_name = soup.select("title")[0].getText().split(" »")[0]
                 links.append(team_link)
                 temp_dict = {
                     "model": "soccer_players.team",
@@ -75,6 +80,7 @@ for i in all_time_league_tables:
                 }
                 world_football_data.append(temp_dict)
                 pk = pk + 1
+        counter = counter + 2
 
 with open('../fixtures/world_football_data.json', 'w') as f:
     json.dump(world_football_data, f)

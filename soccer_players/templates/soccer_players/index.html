@@ -1,48 +1,85 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-    <title>Soccer Players</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.css" rel="stylesheet"></link>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
-    <script type="text/javascript">
-        $(document).ready(function() {
-    $('.js-example-basic-single').select2();
-    });
-    </script>
-    <script type = "text/javascript">
-        document.addEventListener('DOMContentLoaded', () => {
-            document.getElementById('submit').onclick = function() {
-                num = document.getElementById('number').value
-                fetch(`/teams/${num}`)
-                .then(response => response.text())
-                .then(html => {
-                    let parser = new DOMParser();
-                    let doc = parser.parseFromString(html, 'text/html');
-                    let new_body = doc.querySelector('body');
-                    let old_body = document.querySelector('body');
-                    old_body.replaceWith(new_body);
-                    $('.js-example-basic-single').select2();
-                });
-            }
-    });
-    </script>
-    </head>
-    <body>
-        <select class="js-example-basic-single" name="number" id="number">
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-            <option value="6">6</option>
-            <option value="7">7</option>
-            <option value="8">8</option>
-            <option value="9">9</option>
-            <option value="10">10</option>
-        </select>
-        
-        <input type="submit" id="submit">
 
-        <div id="content"></div>
-    </body>
+<head>
+	<title>Soccer Players</title>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.css" rel="stylesheet"></link>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
+	<script type="text/javascript">
+	$(document).ready(function() {
+		function formatTeam(team) {
+			if(team.id === 'placeholder') {
+				return "Select a team";
+			}
+			var image = $(team.element).data('image');
+			var $team = $('<span><img src=' + image + ' />' + team.text + '</span>');
+			return $team;
+		};
+		$(".js-example-placeholder-single").select2({
+			placeholder: "Select a team",
+			templateResult: formatTeam,
+			templateSelection: formatTeam,
+			allowClear: true
+		});
+	});
+	</script>
+	<script type="text/javascript">
+	document.addEventListener('DOMContentLoaded', () => {
+		document.getElementById('remove').disabled = true;
+		document.getElementById('add').onclick = function() {
+			num = document.getElementsByClassName("select2").length;
+			fetch(`/teams/${num}`).then(response => response.text()).then(html => {
+				let parser = new DOMParser();
+				let doc = parser.parseFromString(html, 'text/html');
+				let option = doc.querySelector('body').innerHTML;
+				$('.js-example-placeholder-single').select2();
+				let new_option = document.createElement("span");
+				new_option.innerHTML = option;
+				document.getElementsByTagName("form")[0].insertBefore(new_option, document.getElementById("add"))
+                function formatTeam(team) {
+			if(team.id === 'placeholder') {
+				return "Select a team";
+			}
+			var image = $(team.element).data('image');
+			var $team = $('<span><img src=' + image + ' />' + team.text + '</span>');
+			return $team;
+		};
+				$(".js-example-placeholder-single").select2({
+			placeholder: "Select a team",
+			templateResult: formatTeam,
+			templateSelection: formatTeam,
+			allowClear: true
+		});
+			});
+			num = document.getElementsByClassName("select2").length;
+			if(num >= 2) {
+				document.getElementById('remove').disabled = false;
+			}
+		}
+		document.getElementById('remove').onclick = function() {
+			num = document.getElementsByClassName("select2").length;
+			document.getElementsByClassName("select2").item(num - 1).remove();
+			document.getElementsByClassName("js-example-placeholder-single select2-hidden-accessible").item(num - 1).remove();
+			if(num <= 3) {
+				document.getElementById('remove').disabled = true;
+			}
+		}
+	});
+	</script>
+</head>
+
+<body class="p-3 mb-2 bg-success text-black">
+	<h1> Find soccer players in common</h1>
+	<br />
+	<form id action="teams/players/" method="POST"> {% csrf_token %} {% for num in number %}
+		<select class="js-example-placeholder-single" name="{{ num }}">
+			<option selected disabled hidden style="display: none" value='placeholder'></option> {% for team in teams %}
+			<option data-image="{{ team.image }}" value="{{ team.link }}">{{ team.name }}</option> {% endfor %} </select> {% endfor %}
+		<button type="button" class="btn btn-primary" id="add">+ (Add Team)</button>
+		<button type="button" class="btn btn-danger" id="remove">- (Remove Team)</button>
+		<input class="btn btn-dark" type="submit" value="Submit"> </form>
+</body>
+
 </html>

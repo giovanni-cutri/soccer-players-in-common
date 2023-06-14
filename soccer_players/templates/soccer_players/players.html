@@ -1,18 +1,17 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" style="height: 100%; display:table; margin:auto;">
     <head>
         <title>Soccer Players</title>
     </head>
-    <body style="background-color: #567d46">
-        <ul>
+    <body style="background-color: #567d46; display: table-cell;
+    vertical-align: middle; height: 100%;">
             {% for player in players %}
-                <h1 style="margin: auto; width: 20%;">{{ player.name }}</h1>
-                <br />
-                <img style="display: block; margin-left: auto; margin-right: auto; width:20%;" src="{{ player.image }}">
+                {{ player|safe }}
                 <br />
                 <br />
+            {% empty %}
+            <h1>No players</h1>
             {% endfor %}
-        </ul>
 
     </body>
 </html>
