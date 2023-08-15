@@ -22,6 +22,12 @@ Run *soccer-players-in-common.py* and follow the instructions printed on the scr
 
 You will get a list containing the names of the players.
 
+You can also filter results by the country or position of the players, using the following command-line arguments:
+
+````
+-c, --country       the country of the players
+-p, --position      the position of the players
+````
 
 ## License
 
