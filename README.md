@@ -1,5 +1,3 @@
-![Socialify](https://github.com/giovanni-cutri/soccer-players-in-common/blob/main/resources/socialify-logo.png)
-
 # soccer-players-in-common
  
 As a soccer fan, have you ever looked at two or more teams and wondered if any footballers played for all of them? 
